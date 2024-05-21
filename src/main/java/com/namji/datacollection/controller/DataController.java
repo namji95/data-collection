@@ -2,6 +2,7 @@ package com.namji.datacollection.controller;
 
 import com.namji.datacollection.dto.request.DataRequest;
 import com.namji.datacollection.dto.response.CommonResponse;
+import com.namji.datacollection.dto.response.DataResponse;
 import com.namji.datacollection.service.DataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,13 +20,15 @@ public class DataController {
   private final DataService dataService;
 
   @PostMapping("/data-info")
-  public ResponseEntity<CommonResponse<Void>> createData (
+  public ResponseEntity<CommonResponse<DataResponse>> createData (
       @RequestBody DataRequest request) {
-    dataService.createData(request);
+    DataResponse response = dataService.createData(request);
 
     return ResponseEntity.status(HttpStatus.OK.value()).body(
-        CommonResponse.<Void>builder()
-            .message("success").build());
+        CommonResponse.<DataResponse>builder()
+            .message("success")
+            .data(response)
+            .build());
   }
 
   /*
