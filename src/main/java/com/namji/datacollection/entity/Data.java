@@ -1,6 +1,8 @@
 package com.namji.datacollection.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,15 +20,18 @@ public class Data extends TimeStamp {
   private Long dataId;
 
   @Column(nullable = false)
-  @Convert(converter = StringListConverter.class)
-  private List<String> dataList;
+  private String dataInfo;
+
+  @Column(nullable = false)
+  private LocalDateTime recordedAt;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "device_id", nullable = false)
   private Device device;
 
-  public Data(List<String> dataList, Device device) {
-    this.dataList = dataList;
+  public Data(String info, LocalDateTime recordedAt, Device device) {
+    this.dataInfo = info;
+    this.recordedAt = recordedAt;
     this.device = device;
   }
 }
