@@ -19,6 +19,7 @@ public class GroupController {
 
   private final GroupService groupService;
 
+  // 그룹 등록
   @PostMapping("/groups")
   public ResponseEntity<CommonResponse<GroupResponse>> createGroup(
       @RequestBody GroupRequest request) {

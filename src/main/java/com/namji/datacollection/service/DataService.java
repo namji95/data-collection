@@ -1,7 +1,9 @@
 package com.namji.datacollection.service;
 
 import com.namji.datacollection.dto.request.DataRequest;
+import com.namji.datacollection.dto.request.StatisticsRequest;
 import com.namji.datacollection.dto.response.DataResponse;
+import com.namji.datacollection.dto.response.StatisticsResponse;
 import com.namji.datacollection.entity.Data;
 import com.namji.datacollection.entity.Device;
 import com.namji.datacollection.repository.DataRepository;
@@ -12,6 +14,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +24,7 @@ public class DataService {
   private final DataRepository dataRepository;
   private final DeviceRepository deviceRepository;
 
+  @Transactional
   public List<DataResponse> createData(DataRequest request) {
     Device device = deviceRepository.findBySerialNumber(request.getSerialNumber());
     if (device == null) {
@@ -35,6 +39,35 @@ public class DataService {
       responses.add(new DataResponse(data.getDataInfo(), data.getRecordedAt()));
     }
     return responses;
+  }
+
+  @Transactional(readOnly = true)
+  public StatisticsResponse statisticsData(StatisticsRequest request) {
+    Device device = deviceRepository.findBySerialNumber(request.getSerialNumber());
+    if (device == null) {
+      throw new IllegalArgumentException("장치가 존재하지 않습니다.");
+    }
+
+    List<Data> data = dataRepository.findAllByDeviceAndRecordedAtBetween(
+        device, request.getStartDate(), request.getEndDate());
+    if (data == null) {
+      throw new IllegalArgumentException("데이터가 존재하지 않습니다.");
+    }
+
+    float statisticsData = 0;
+    int sumData = 0;
+    for (int i = 0; i < data.size(); i++) {
+      sumData += Integer.parseInt(data.get(i).getDataInfo());
+      statisticsData = (float) sumData / data.size();
+    }
+    log.info(String.valueOf(sumData));
+    log.info(String.valueOf(data.size()));
+    log.info(String.valueOf(statisticsData));
+
+    return new StatisticsResponse(
+        device.getDeviceId(),
+        device.getSerialNumber(),
+        statisticsData);
   }
 
   // 입력받은 문자열 자르기
@@ -65,4 +98,5 @@ public class DataService {
     }
     return dataList;
   }
+
 }

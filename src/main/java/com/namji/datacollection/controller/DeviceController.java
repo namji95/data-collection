@@ -19,6 +19,7 @@ public class DeviceController {
 
   private final DeviceService deviceService;
 
+  // 장치 등록
   @PostMapping("devices")
   public ResponseEntity<CommonResponse<DeviceResponse>> createDevice(
       @RequestBody DeviceRequest request) {
