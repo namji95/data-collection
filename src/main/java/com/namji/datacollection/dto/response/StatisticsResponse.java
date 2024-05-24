@@ -9,6 +9,6 @@ public class StatisticsResponse {
 
   private Long deviceId;
   private String serialNumber;
-  private float averageData;
+  private Double averageData;
 
 }

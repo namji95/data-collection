@@ -9,7 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class DataResponse {
 
-  private String dataInfo;
+  private int dataInfo;
   private LocalDateTime recordedAt;
 
 }

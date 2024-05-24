@@ -12,8 +12,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DataRepository extends JpaRepository<Data, Long> {
 
-  @Query("SELECT d FROM Data d WHERE d.device = :device AND d.recordedAt BETWEEN :startDate AND :endDate")
-  List<Data> findAllByDeviceAndRecordedAtBetween(@Param("device") Device device, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
-
-
 }

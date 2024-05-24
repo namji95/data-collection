@@ -21,7 +21,7 @@ public class Data extends TimeStamp {
   private Long dataId;
 
   @Column(nullable = false)
-  private String dataInfo;
+  private int dataInfo;
 
   @Column(nullable = false)
   private LocalDateTime recordedAt;
@@ -30,7 +30,7 @@ public class Data extends TimeStamp {
   @JoinColumn(name = "device_id", nullable = false)
   private Device device;
 
-  public Data(String info, LocalDateTime recordedAt, Device device) {
+  public Data(int info, LocalDateTime recordedAt, Device device) {
     this.dataInfo = info;
     this.recordedAt = recordedAt;
     this.device = device;
