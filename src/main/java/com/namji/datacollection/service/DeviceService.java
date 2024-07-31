@@ -1,9 +1,12 @@
 package com.namji.datacollection.service;
 
+import com.namji.datacollection.dto.request.DataStatisticsRequest;
 import com.namji.datacollection.dto.request.DeviceRequest;
+import com.namji.datacollection.dto.response.DataStatisticsResponse;
 import com.namji.datacollection.dto.response.DeviceResponse;
 import com.namji.datacollection.entity.Device;
 import com.namji.datacollection.entity.Group;
+import com.namji.datacollection.repository.DeviceQuery;
 import com.namji.datacollection.repository.DeviceRepository;
 import com.namji.datacollection.repository.GroupRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +18,7 @@ public class DeviceService {
 
   private final DeviceRepository deviceRepository;
   private final GroupRepository groupRepository;
+  private final DeviceQuery deviceQuery;
 
   public DeviceResponse createDevice(DeviceRequest deviceRequest) {
     Group findGroup = groupRepository.findByStationGroupSerial(deviceRequest.getStationGroupSerial());
@@ -37,5 +41,9 @@ public class DeviceService {
         saveDevice.getSerialNumber(),
         saveDevice.getGroup(),
         saveDevice.getCreatedAt());
+  }
+
+  public DataStatisticsResponse getDeviceStatistics(DataStatisticsRequest request) {
+    return deviceQuery.getDeviceStatistics(request);
   }
 }

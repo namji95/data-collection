@@ -4,14 +4,11 @@ import com.namji.datacollection.dto.request.DataRequest;
 import com.namji.datacollection.entity.Data;
 import com.namji.datacollection.entity.Device;
 import com.namji.datacollection.repository.DataJpaRepository;
-import com.namji.datacollection.repository.DataRepository;
 import com.namji.datacollection.repository.DeviceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.filter.RequestContextFilter;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,9 +29,7 @@ public class DataServiceImpl implements DataService {
 
     List<String> splitData = splitData(dataRequest.getDataSet());
     List<Integer> decimalData = decimalData(splitData);
-    LocalDateTime recordedAt = formatting(dataRequest.getRecordedAt());
-
-    List<Data> intervalData = dataList(decimalData, recordedAt, dataRequest.getInterval(), findDevice);
+    List<Data> intervalData = dataList(decimalData, dataRequest.getRecordedAt(), dataRequest.getInterval(), findDevice);
 
     dataJpaRepository.saveAll(intervalData);
   }
@@ -57,12 +52,6 @@ public class DataServiceImpl implements DataService {
     }
 
     return decimalData;
-  }
-
-  // 날짜 포맷
-  private LocalDateTime formatting(String recordedAt) {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    return LocalDateTime.parse(recordedAt, formatter);
   }
 
   // interval 간격으로 시간 계산한 값과 데이터 저장
