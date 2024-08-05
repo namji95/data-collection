@@ -9,9 +9,11 @@ import com.namji.datacollection.exception.CustomException;
 import com.namji.datacollection.exception.ErrorCode;
 import com.namji.datacollection.repository.GroupQuery;
 import com.namji.datacollection.repository.GroupRepository;
+import com.namji.datacollection.util.CommonUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -20,13 +22,10 @@ public class GroupService {
 
   private final GroupRepository groupRepository;
   private final GroupQuery groupQuery;
+  private final CommonUtil commonUtil;
 
   public GroupResponse createGroup(GroupRequest groupRequest) {
-    Group findGroup = groupRepository.findByStationGroupSerial(groupRequest.getStationGroupSerial());
-
-    if (findGroup != null) {
-      throw new CustomException(ErrorCode.DUPLICATE_GROUP);
-    }
+    commonUtil.duplicatedGroup(groupRequest.getStationGroupSerial());
 
     Group saveGroup = new Group(groupRequest.getStationGroupSerial());
 
@@ -40,6 +39,10 @@ public class GroupService {
   }
 
   public List<DataStatisticsResponse> getGroupStatistics(DataStatisticsRequest request) {
-    return groupQuery.getGroupStatistics(request);
+    Group findGroup = commonUtil.findGroup(request.getStationGroupSerial());
+    LocalDateTime startDate = request.getStartDate();
+    LocalDateTime endDate = request.getEndDate();
+
+    return groupQuery.getGroupStatistics(findGroup, startDate, endDate);
   }
 }
