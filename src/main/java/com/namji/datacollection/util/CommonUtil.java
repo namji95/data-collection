@@ -35,14 +35,21 @@ public class CommonUtil {
     return findGroup;
   }
 
+  public void duplicatedDevice (String deviceSerial, Group group) {
+    Device findDevice = deviceRepository.findBySerialNumberAndGroup(deviceSerial, group);
+
+    if (findDevice != null) {
+      throw new CustomException(ErrorCode.DUPLICATE_DEVICE);
+    }
+  }
+
   public Device findDevice (String deviceSerial, Group group) {
     Device findDevice = deviceRepository.findBySerialNumberAndGroup(deviceSerial, group);
 
     if (findDevice == null) {
-      throw new CustomException(ErrorCode.DUPLICATE_DEVICE);
+      throw new CustomException(ErrorCode.NOT_FOUND_DEVICE);
     }
 
     return findDevice;
   }
-
 }
