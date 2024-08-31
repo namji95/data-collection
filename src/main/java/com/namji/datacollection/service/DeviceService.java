@@ -12,6 +12,7 @@ import com.namji.datacollection.repository.GroupRepository;
 import com.namji.datacollection.util.CommonUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -24,6 +25,8 @@ public class DeviceService {
   private final DeviceQuery deviceQuery;
   private final CommonUtil commonUtil;
 
+  // 데이터 저장 장치 생성
+  @Transactional
   public DeviceResponse createDevice(DeviceRequest deviceRequest) {
     Group findGroup = commonUtil.findGroup(deviceRequest.getStationGroupSerial());
     commonUtil.duplicatedDevice(deviceRequest.getSerialNumber(), findGroup);
@@ -39,6 +42,8 @@ public class DeviceService {
         saveDevice.getCreatedAt());
   }
 
+  // 장치 기준 데이터 통계
+  @Transactional(readOnly = true)
   public DataStatisticsResponse getDeviceStatistics(DataStatisticsRequest request) {
     Group findGroup = commonUtil.findGroup(request.getStationGroupSerial());
     Device findDevice = commonUtil.findDevice(request.getSerialNumber(), findGroup);

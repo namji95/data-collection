@@ -12,6 +12,7 @@ import com.namji.datacollection.repository.GroupRepository;
 import com.namji.datacollection.util.CommonUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,6 +25,8 @@ public class GroupService {
   private final GroupQuery groupQuery;
   private final CommonUtil commonUtil;
 
+  // 데이터 저장 장치 분류 그룹
+  @Transactional
   public GroupResponse createGroup(GroupRequest groupRequest) {
     commonUtil.duplicatedGroup(groupRequest.getStationGroupSerial());
 
@@ -38,6 +41,8 @@ public class GroupService {
 
   }
 
+  // 그룹 기준 데이터 통계
+  @Transactional(readOnly = true)
   public List<DataStatisticsResponse> getGroupStatistics(DataStatisticsRequest request) {
     Group findGroup = commonUtil.findGroup(request.getStationGroupSerial());
     LocalDateTime startDate = request.getStartDate();

@@ -10,6 +10,7 @@ import com.namji.datacollection.repository.DeviceRepository;
 import com.namji.datacollection.util.CommonUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class DataService {
   private final CommonUtil commonUtil;
 
   // 데이터 저장
+  @Transactional
   public void createData(DataRequest dataRequest) {
     Device findDevice = deviceRepository.findBySerialNumber(dataRequest.getSerialNumber());
     if (findDevice == null) {
